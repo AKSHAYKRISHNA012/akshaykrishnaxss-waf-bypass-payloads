@@ -1,0 +1,89 @@
+# 🛡️ XSS Payload Generation & WAF Evasion Toolkit
+
+**Prepared by:** Akshay Krishna A  
+**Purpose:** Demonstrate how XSS payloads can be crafted to bypass Web Application Firewalls (WAFs) using encoding and obfuscation techniques.
+
+---
+
+## 📌 Introduction
+
+This project explores how character-based filters in Web Application Firewalls (WAFs) can be bypassed through advanced XSS payload generation. The core objective is to evaluate the effectiveness of WAFs when facing obfuscated and encoded payloads, highlighting real-world security implications.
+
+---
+
+## 🧪 Test Environment
+
+- **Web Application:** [DVWA (Damn Vulnerable Web Application)](http://www.dvwa.co.uk/)
+- **WAF Configuration:**
+  - Default rules to detect common XSS signatures
+  - Input validation enabled for form fields and URL parameters
+
+---
+
+## ⚙️ Methodology
+
+### 1. Payload Generation
+A custom Python script was created to generate various XSS payloads using:
+- HTML entity encoding
+- Character code injection (`String.fromCharCode`)
+- URL encoding
+- JavaScript URI schemes
+- Obfuscation patterns
+
+### 2. Payload Delivery
+Payloads were tested using:
+- Web forms (POST requests)
+- URL query parameters (GET requests)
+
+### 3. Evaluation
+Each attempt was monitored by:
+- Observing DVWA’s response (alerts, script execution)
+- Analyzing WAF logs for blocking behavior
+
+---
+
+## 💣 Payloads Tested
+
+| No. | Payload Type | Payload Example |
+|-----|--------------|-----------------|
+| 1 | Base Payload | `<script>alert('XSS');</script>` |
+| 2 | CharCode Injection | `alert(String.fromCharCode(60,115,...))` |
+| 3 | Obfuscated XSS | `'';!--"<XSS>=&{()};` |
+| 4 | JavaScript URI | `javascript:alert(1)` |
+| 5 | URL Encoded | `%3Cscript%3Ealert(1)%3C%2Fscript%3E` |
+
+---
+
+## ✅ Results Summary
+
+| Payload | Status | Notes |
+|--------|--------|-------|
+| Base Payload | ❌ Blocked | Signature matched by WAF |
+| CharCode Injection | ✅ Bypassed | Successfully executed |
+| Obfuscated Payload | ❌ Blocked | Pattern detected |
+| JavaScript URI | ⚠️ Partial | Executed in URL input, blocked in forms |
+| URL Encoded | ✅ Bypassed | WAF failed to decode |
+
+---
+
+## 🔍 Key Takeaways
+
+- **Encoding techniques** (char codes, URL encoding) are effective in bypassing WAFs relying only on character-based detection.
+- **Obfuscation alone** may not work if patterns are already blacklisted.
+- WAFs lacking **context-aware filtering** are vulnerable to evasive payloads.
+
+---
+
+## 🔐 Recommendations
+
+- Use a combination of **context-aware** and **pattern-based** filtering in WAFs.
+- Conduct **routine testing** with updated payloads and bypass strategies.
+- Apply **input sanitization** and **output encoding** based on context (HTML, JS, attributes, etc.).
+- Train developers to understand evolving **XSS evasion techniques**.
+
+---
+
+## 📂 Future Scope
+
+- Expand the script to include SVG/scriptless and DOM-based payloads.
+- Test payloads on multiple WAF solutions (e.g., ModSecurity, AWS WAF, Cloud
